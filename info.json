@@ -1,0 +1,65 @@
+{
+  "identifier": "com.qianyu.geminiagentplatform",
+  "version": "0.1.0",
+  "category": "translate",
+  "name": "Gemini Agent Platform",
+  "summary": "使用Google Cloud Agent Platform / Vertex AI调用Gemini API进行文本翻译",
+  "icon": "001",
+  "author": "qianyu",
+  "homepage": "",
+  "appcast": "",
+  "minBobVersion": "1.8.0",
+  "options": [
+    {
+      "identifier": "apiKey",
+      "type": "text",
+      "title": "Authorization Key",
+      "textConfig": {
+        "type": "secure",
+        "placeholderText": "Google Cloud Authorization Key"
+      },
+      "desc": "Google Cloud中创建并绑定Service Account的Authorization Key"
+    },
+    {
+      "identifier": "projectId",
+      "type": "text",
+      "title": "Project ID",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "google-cloud-project"
+      },
+      "desc": "Google Cloud Project ID"
+    },
+    {
+      "identifier": "model",
+      "type": "menu",
+      "title": "Model",
+      "defaultValue": "gemini-3.5-flash-lite",
+      "menuValues": [
+        {
+          "title": "Gemini 3.5 Flash-Lite",
+          "value": "gemini-3.5-flash-lite"
+        },
+        {
+          "title": "Gemini 3.5 Flash",
+          "value": "gemini-3.5-flash"
+        },
+        {
+          "title": "Gemini 3.1 Flash-Lite",
+          "value": "gemini-3.1-flash-lite"
+        }
+      ]
+    },
+    {
+      "identifier": "customPrompt",
+      "type":"text",
+      "title": "附加翻译指令",
+      "textConfig": {
+        "type":"visible",
+        "height": 100,
+        "placeholderText": "可选。例如：技术用语优先保留原文。"
+      },
+      "desc": "追加到默认翻译指令后，不填写则使用默认设置。"
+    }
+  ]
+}

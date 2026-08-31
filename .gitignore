@@ -1,0 +1,18 @@
+# Alma / AI agent workspace metadata (local only)
+.alma-snapshots/
+.alma/
+AGENTS.md
+**/AGENTS.md
+CLAUDE.md
+**/CLAUDE.md
+.claude/
+.cursor/
+.codex/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
