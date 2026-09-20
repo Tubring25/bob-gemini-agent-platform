@@ -250,6 +250,13 @@ function handleGeminiResponse(resp, callback) {
       return;
     }
 
+    const finishReason = getGeminiFinishReason(data);
+    const finishMessage = getGeminiFinishMessage(finishReason);
+    if (finishMessage && finishMessage.trim() !== '') {
+      callback({ error: makeError("api", finishMessage) });
+      return;
+    }
+
     var translatedText = extractTranslatedText(data);
     if (translatedText === "") {
       callback({ error: makeError("api", "Gemini 未返回有效翻译结果") });
@@ -346,4 +353,86 @@ function translate(query) {
       }
     });
   });
+}
+
+function pluginValidate(completion) {
+  if (typeof completion !== "function") return;
+
+  let completed = false;
+  function finish(response) {
+    if (completed) return;
+    completed = true;
+    completion(response);
+  }
+
+  const optionError = validateOptions();
+  if (optionError) {
+    finish({ result: false, error: optionError });
+    return;
+  }
+
+  requestGemini("hello", "en", "zh-Hans", null, function (response) {
+    if (response.error) {
+      finish({ result: false, error: response.error });
+      return;
+    }
+
+    finish({ result: true });
+  });
+}
+
+function getGeminiFinishReason(data) {
+  if (data === null || typeof data !== "object") return "";
+
+  if (data.promptFeedback) {
+    const blockReason = data.promptFeedback.blockReason;
+    if (typeof blockReason === "string" && blockReason.trim() !== "") {
+      return blockReason.trim();
+    }
+  }
+
+  if (!Array.isArray(data.candidates)) return "";
+
+  for (let i = 0; i < data.candidates.length; i++) {
+    const candidate = data.candidates[i];
+    if (candidate === null || typeof candidate !== "object") continue;
+
+    const finishReason = candidate.finishReason;
+    if (typeof finishReason !== "string") continue;
+
+    const trimmedReason = finishReason.trim();
+    if (trimmedReason === "" || trimmedReason === "STOP") continue;
+
+    return trimmedReason;
+  }
+
+  return "";
+}
+
+function getGeminiFinishMessage(reason) {
+  if (typeof reason !== "string") return "";
+
+  const normalizedReason = reason.trim().toUpperCase();
+  if (normalizedReason === "") return "";
+
+  switch (normalizedReason) {
+    case "STOP":
+      return "";
+    case "SAFETY":
+    case "IMAGE_SAFETY":
+      return "内容被 Gemini 安全策略拦截。";
+    case "BLOCKLIST":
+    case "PROHIBITED_CONTENT":
+    case "MODEL_ARMOR":
+      return "内容被 Gemini 内容政策拦截。";
+    case "SPII":
+      return "内容可能包含敏感个人信息，Gemini 未返回译文。";
+    case "RECITATION":
+      return "内容可能触发引用或版权限制，Gemini 未返回译文。";
+    case "MAX_TOKENS":
+      return "Gemini 输出达到长度上限，未返回完整译文。";
+    case "OTHER":
+    default:
+      return "Gemini 未能完成翻译。";
+  }
 }
