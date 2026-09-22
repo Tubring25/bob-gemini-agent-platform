@@ -16,3 +16,7 @@ CLAUDE.md
 *.pem
 *.key
 .DS_Store
+
+# build and release
+/build/
+/release/

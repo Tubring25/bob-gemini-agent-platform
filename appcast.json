@@ -1,0 +1,13 @@
+{
+  "identifier": "com.qianyu.geminiagentplatform",
+  "versions": [
+    {
+      "version": "0.1.0",
+      "desc": "支持通过Google Cloud Agent Platform/Vertex AI Gemini进行文本翻译，提供多模型、Custom Model、自定义Prompt和格式保持。",
+      "sha256": "d31c1677f8a4c11f9c9415c7140b8e4df68b1601a47b0322a3948669b874959c",
+      "url": "https://github.com/Tubring25/bob-gemini-agent-platform/releases/download/v0.1.0/gemini-agent-platform_0.1.0.bobplugin",
+      "minBobVersion": "1.8.0",
+      "timestamp": 1790065118517
+    }
+  ]
+}
