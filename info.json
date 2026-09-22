@@ -45,10 +45,36 @@
           "value": "gemini-3.5-flash"
         },
         {
+          "title": "Gemini 3.8 Flash",
+          "value": "gemini-3.8-flash"
+        },
+        {
+          "title": "Gemini 3.7 Flash",
+          "value": "gemini-3.7-flash"
+        },
+        {
+          "title": "Gemini 3.6 Flash",
+          "value": "gemini-3.6-flash"
+        },
+        {
           "title": "Gemini 3.1 Flash-Lite",
           "value": "gemini-3.1-flash-lite"
+        },
+        {
+          "title": "Custom Model…",
+          "value": "__custom__"
         }
       ]
+    },
+    {
+      "identifier": "customModel",
+      "type": "text",
+      "title": "Custom Model",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "gemini-x.x-xxxx"
+      },
+      "desc": "仅当Model选择Custom Model时使用"
     },
     {
       "identifier": "customPrompt",

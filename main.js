@@ -59,6 +59,7 @@ function getTargetLanguage(query) {
 function validateOptions() {
   var apiKey = $option.apiKey;
   var projectId = $option.projectId;
+  var model = resolveModel($option);
 
   if (!apiKey || apiKey.trim() === "") {
     return { type: "secretKey", message: "请填写 Google Cloud Authorization Key" };
@@ -66,6 +67,14 @@ function validateOptions() {
 
   if (!projectId || projectId.trim() === "") {
     return { type: "param", message: "请填写 Google Cloud Project ID" };
+  }
+
+  if (model === "") {
+    return { type: "param", message: "选择 Custom Model 后请填写 Custom Model ID" };
+  }
+
+  if (!/^[A-Za-z0-9._-]+$/.test(model)) {
+    return { type: "param", message: "Model ID 只能包含字母、数字、点、下划线和连字符" };
   }
 
   return null;
@@ -293,8 +302,7 @@ function requestGemini(text, from, to, cancelSignal, callback) {
 
     var apiKey = $option.apiKey.trim();
     var projectId = $option.projectId.trim();
-    var model = typeof $option.model === "string" ? $option.model.trim() : "";
-    if (model === "") model = "gemini-3.5-flash-lite";
+    const model = resolveModel($option);
 
     var url =
       "https://aiplatform.googleapis.com/v1/projects/" +
@@ -435,4 +443,18 @@ function getGeminiFinishMessage(reason) {
     default:
       return "Gemini 未能完成翻译。";
   }
+}
+
+function resolveModel(options) {
+  const selectedModel = options && typeof options.model === "string" ? options.model.trim() : "";
+
+  if (selectedModel === "__custom__") {
+    return typeof options.customModel === "string" ? options.customModel.trim() : "";
+  }
+
+  if (selectedModel === "") {
+    return "gemini-3.5-flash-lite";
+  }
+
+  return selectedModel;
 }
